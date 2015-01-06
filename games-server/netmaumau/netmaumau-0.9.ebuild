@@ -19,6 +19,7 @@ RDEPEND="
 	>=dev-libs/popt-1.10
 	>=sci-libs/gsl-1.9
 	sys-apps/file
+	dev-db/sqlite:3
 "
 DEPEND="${RDEPEND}
 	app-editors/vim-core
