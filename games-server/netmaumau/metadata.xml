@@ -5,4 +5,16 @@
 		<email>hasufell@posteo.de</email>
 		<name>Julian Ospald</name>
 	</maintainer>
+	<upstream>
+		<maintainer>
+			<name>Heiko Schäfer</name>
+			<email>heiko@rangun.de</email>
+		</maintainer>
+		<bugs-to>https://github.com/velnias75/NetMauMau/issues</bugs-to>
+	</upstream>
+	<use>
+		<flag name="doc">Build api documentation</flag>
+		<flag name="cli-client">Build a console based client</flag>
+		<flag name="xinetd">Install a xinetd service</flag>
+	</use>
 </pkgmetadata>
