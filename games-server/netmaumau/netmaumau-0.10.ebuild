@@ -76,3 +76,11 @@ pkg_postinst() {
 	elog "  games-board/netmaumau"
 }
 
+pkg_prerm() {
+	rm -rf ${ROOT}/var/lib/games/netmaumau
+	rm -rf ${ROOT}/usr/share/netmaumau/ai_img*.png
+        if [ -e ${ROOT}/etc/xinetd.d/netmaumau ]; then \
+		sed -i 's/\(disable[[:space:]]*=[[:space:]]*\)\(no\)/\1yes/' ${ROOT}/etc/xinetd.d/netmaumau ; \
+        fi
+}
+
