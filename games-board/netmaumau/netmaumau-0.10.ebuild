@@ -42,4 +42,3 @@ src_install() {
 	insinto /usr/share/nmm-qt-client
 	doins src/*.qm
 }
-

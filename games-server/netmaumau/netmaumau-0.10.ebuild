@@ -51,25 +51,25 @@ src_configure() {
 
 src_install() {
 	default
-	rm -f ${D}/usr/share/netmaumau/ai_img*.png
+	rm -f "${D}/usr/share/netmaumau/ai_img*.png"
 	prune_libtool_files
-	keepdir ${ROOT}/var/lib/games/netmaumau
-	fowners nobody:nogroup ${ROOT}/var/lib/games/netmaumau
+	keepdir "${ROOT}/var/lib/games/netmaumau"
+	fowners nobody:nogroup "${ROOT}/var/lib/games/netmaumau"
 }
 
 pkg_postinst() {
 
-	cd ${ROOT}/usr/share/netmaumau
+	cd "${ROOT}/usr/share/netmaumau"
 
 	if [ ! -e ai_img1.png ]; then \
-                ln -s QS.PNG ai_img1.png ; \
+		ln -s QS.PNG ai_img1.png ; \
+	fi
+	if [ ! -e ai_img2.png ]; then \
+		ln -s KC.PNG ai_img2.png ; \
         fi
-        if [ ! -e ai_img2.png ]; then \
-                ln -s KC.PNG ai_img2.png ; \
-        fi
-        if [ ! -e ai_img3.png ]; then \
-                ln -s QC.PNG ai_img3.png ; \
-        fi
+	if [ ! -e ai_img3.png ]; then \
+		ln -s QC.PNG ai_img3.png ; \
+	fi
 
 	elog "This is only the server part, you might want to install"
 	elog "the client too:"
@@ -77,10 +77,9 @@ pkg_postinst() {
 }
 
 pkg_prerm() {
-	rm -rf ${ROOT}/var/lib/games/netmaumau
-	rm -rf ${ROOT}/usr/share/netmaumau/ai_img*.png
-        if [ -e ${ROOT}/etc/xinetd.d/netmaumau ]; then \
-		sed -i 's/\(disable[[:space:]]*=[[:space:]]*\)\(no\)/\1yes/' ${ROOT}/etc/xinetd.d/netmaumau ; \
-        fi
+	rm -rf "${ROOT}/var/lib/games/netmaumau"
+	rm -rf "${ROOT}/usr/share/netmaumau/ai_img*.png"
+	if [ -e "${ROOT}/etc/xinetd.d/netmaumau" ]; then \
+		sed -i 's/\(disable[[:space:]]*=[[:space:]]*\)\(no\)/\1yes/' "${ROOT}/etc/xinetd.d/netmaumau" ; \
+	fi
 }
-
