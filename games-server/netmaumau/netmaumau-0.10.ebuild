@@ -13,14 +13,13 @@ SRC_URI="https://github.com/velnias75/NetMauMau/archive/V${PV}.tar.gz -> ${P}-se
 LICENSE="LGPL-3"
 SLOT="0/0"
 KEYWORDS="~amd64 ~x86"
-IUSE="doc static-libs -cli-client -xinetd"
+IUSE="doc static-libs cli-client"
 
 RDEPEND="
 	>=dev-libs/popt-1.10
 	>=sci-libs/gsl-1.9
 	sys-apps/file
 	dev-db/sqlite:3
-	xinetd? ( sys-apps/xinetd )
 "
 DEPEND="${RDEPEND}
 	app-editors/vim-core
@@ -32,6 +31,7 @@ DEPEND="${RDEPEND}
 S=${WORKDIR}/${P}-server
 
 src_prepare() {
+	epatch "${FILESDIR}"/${P}-fix-symlink-creation.patch
 	eautoreconf
 }
 
@@ -40,7 +40,7 @@ src_configure() {
 
 	econf \
 		--enable-client \
-		$(use_enable xinetd) \
+		--enable-xinetd \
 		$(use_enable cli-client) \
 		$(use_enable doc apidoc) \
 		--enable-ai-name="Gentoo Hero" \
@@ -51,27 +51,17 @@ src_configure() {
 
 src_install() {
 	default
-	rm -f "${D}"/usr/share/netmaumau/ai_img*.png
 	prune_libtool_files
 	keepdir "${ROOT}"/var/lib/games/netmaumau
 	fowners nobody:nogroup "${ROOT}"/var/lib/games/netmaumau
 }
 
 pkg_postinst() {
-
-	cd "${ROOT}"/usr/share/netmaumau
-
-	if [ ! -e ai_img1.png ]; then \
-		ln -s QS.PNG ai_img1.png ; \
-	fi
-	if [ ! -e ai_img2.png ]; then \
-		ln -s KC.PNG ai_img2.png ; \
-        fi
-	if [ ! -e ai_img3.png ]; then \
-		ln -s QC.PNG ai_img3.png ; \
-	fi
-
 	elog "This is only the server part, you might want to install"
 	elog "the client too:"
 	elog "  games-board/netmaumau"
+	elog
+	elog "This server also installs a xinetd service. You need"
+	elog "  sys-apps/xinetd"
+	elog "if you want to get the server started on demand."
 }
