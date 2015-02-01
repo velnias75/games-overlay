@@ -29,10 +29,6 @@ S=${WORKDIR}/${P}-client
 src_configure() {
 	eqmake4
 	lrelease src/src.pro
-
-	sed -i \
-		-e 's/unix:QMAKE_CXXFLAGS += .*$/unix:QMAKE_CXXFLAGS += -fstrict-aliasing/' \
-		-e 's/^[[:space:]]*-Wformat.*$//' -e 's/^[[:space:]]*-Wsugg.*$//' src/src.pro || die
 }
 
 src_install() {
