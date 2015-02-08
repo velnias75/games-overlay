@@ -13,6 +13,6 @@
 		<bugs-to>https://github.com/velnias75/NetMauMau-Qt-Client/issues</bugs-to>
 	</upstream>
 	<use>
-		<flag name="espeak">enable speech support (experimental!)</flag>
+		<flag name="espeak">enable speech support</flag>
 	</use>
 </pkgmetadata>
