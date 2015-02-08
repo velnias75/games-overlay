@@ -30,7 +30,7 @@ S=${WORKDIR}/${P}-client
 src_configure() {
 	use espeak && USE_ESPEAK='CONFIG+=espeak'
 	eqmake4 $USE_ESPEAK
-	lrelease src/src.pro 
+	lrelease src/src.pro
 }
 
 src_install() {
