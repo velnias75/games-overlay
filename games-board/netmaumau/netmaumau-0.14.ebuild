@@ -18,11 +18,13 @@ KEYWORDS="~amd64 ~x86"
 IUSE="espeak"
 
 RDEPEND="
-	dev-qt/qtcore:4
-	dev-qt/qtgui:4
-	dev-qt/qtsvg:4
-	espeak? ( app-accessibility/espeak )
-	games-server/netmaumau:0/6"
+	dev-qt/qtcore:4[exceptions]
+	dev-qt/qtgui:4[exceptions]
+	dev-qt/qtsvg:4[exceptions]
+	espeak? ( || ( app-accessibility/espeak[portaudio] app-accessibility/espeak[pulseaudio] ) )
+	games-server/netmaumau:0/6
+"
+
 DEPEND="${RDEPEND}"
 
 S=${WORKDIR}/${P}-client
