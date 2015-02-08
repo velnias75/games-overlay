@@ -23,7 +23,7 @@ RDEPEND="
 	dev-qt/qtsvg:4[exceptions]
 	games-server/netmaumau:0/1
 "
-	
+
 DEPEND="${RDEPEND}"
 
 S=${WORKDIR}/${P}-client
