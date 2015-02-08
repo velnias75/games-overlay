@@ -21,12 +21,14 @@ RDEPEND="
 	>=sci-libs/gsl-1.9
 	sys-apps/file
 "
+
 DEPEND="${RDEPEND}
 	app-editors/vim-core
 	doc? ( >=app-doc/doxygen-1.8.0[dot] )
 	sys-apps/help2man
 	virtual/pkgconfig
 "
+
 S=${WORKDIR}/${P}-server
 
 src_prepare() {
