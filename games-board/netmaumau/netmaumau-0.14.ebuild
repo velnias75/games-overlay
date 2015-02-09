@@ -22,7 +22,7 @@ RDEPEND="
 	dev-qt/qtgui:4[exceptions]
 	dev-qt/qtsvg:4[exceptions]
 	espeak? ( || ( app-accessibility/espeak[portaudio] app-accessibility/espeak[pulseaudio] ) )
-	games-server/netmaumau:0/6
+	games-server/netmaumau:0/7
 "
 
 DEPEND="${RDEPEND}"
