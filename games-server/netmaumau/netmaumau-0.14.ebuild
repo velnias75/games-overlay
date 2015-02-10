@@ -43,7 +43,7 @@ src_configure() {
 	econf \
 		$(use_enable !dedicated client) \
 		--enable-xinetd \
-		$(use_enable cli-client) \
+		$(usex dedicated "--disable-cli-client" "$(use_enable cli-client)") \
 		$(use_enable doc apidoc) \
 		--docdir=/usr/share/doc/${PF} \
 		--localstatedir=/var/lib/games/ \
