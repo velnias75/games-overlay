@@ -13,9 +13,9 @@ SRC_URI="https://github.com/velnias75/NetMauMau/archive/V${PV}.tar.gz -> ${P}-se
 LICENSE="LGPL-3"
 SLOT="0/7"
 KEYWORDS="~amd64 ~x86"
-IUSE="branding cli-client doc server-only static-libs"
+IUSE="branding cli-client dedicated doc static-libs"
 
-REQUIRED_USE="cli-client? ( !server-only )"
+REQUIRED_USE="cli-client? ( !dedicated )"
 
 RDEPEND="
 	dev-db/sqlite:3
@@ -41,7 +41,7 @@ src_configure() {
 	append-cppflags -DNDEBUG
 
 	econf \
-		$(use_enable !server-only client) \
+		$(use_enable !dedicated client) \
 		--enable-xinetd \
 		$(use_enable cli-client) \
 		$(use_enable doc apidoc) \
@@ -60,7 +60,7 @@ src_install() {
 }
 
 pkg_postinst() {
-	if ! use server-only ; then
+	if ! use dedicated ; then
 		elog "This is only the server part, you might want to install" ;
 		elog "the client too:" ;
 		elog "  games-board/netmaumau" ;
