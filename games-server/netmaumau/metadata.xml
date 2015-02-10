@@ -14,5 +14,6 @@
 	</upstream>
 	<use>
 		<flag name="cli-client">Build a console based client</flag>
+		<flag name="server-only">Build only the server and no client library</flag>
 	</use>
 </pkgmetadata>

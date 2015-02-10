@@ -13,7 +13,9 @@ SRC_URI="https://github.com/velnias75/NetMauMau/archive/V${PV}.tar.gz -> ${P}-se
 LICENSE="LGPL-3"
 SLOT="0/7"
 KEYWORDS="~amd64 ~x86"
-IUSE="branding cli-client doc static-libs"
+IUSE="branding cli-client doc server-only static-libs"
+
+REQUIRED_USE="cli-client? ( !server-only )"
 
 RDEPEND="
 	dev-db/sqlite:3
@@ -39,7 +41,7 @@ src_configure() {
 	append-cppflags -DNDEBUG
 
 	econf \
-		--enable-client \
+		$(use_enable !server-only client) \
 		--enable-xinetd \
 		$(use_enable cli-client) \
 		$(use_enable doc apidoc) \
@@ -58,10 +60,12 @@ src_install() {
 }
 
 pkg_postinst() {
-	elog "This is only the server part, you might want to install"
-	elog "the client too:"
-	elog "  games-board/netmaumau"
-	elog
+	if ! use server-only ; then
+		elog "This is only the server part, you might want to install" ;
+		elog "the client too:" ;
+		elog "  games-board/netmaumau" ;
+		elog
+	fi
 	elog "This server also installs a xinetd service. You need"
 	elog "  sys-apps/xinetd"
 	elog "if you want to get the server started on demand."
