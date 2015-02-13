@@ -25,7 +25,10 @@ RDEPEND="
 	games-server/netmaumau:0/7[-dedicated]
 "
 
-DEPEND="${RDEPEND}"
+DEPEND="
+	${RDEPEND}
+	virtual/pkgconfig
+"
 
 S=${WORKDIR}/${P}-client
 
