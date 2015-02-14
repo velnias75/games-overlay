@@ -15,8 +15,6 @@ SLOT="0/7"
 KEYWORDS="~amd64 ~x86"
 IUSE="branding cli-client dedicated doc static-libs"
 
-REQUIRED_USE="cli-client? ( !dedicated )"
-
 RDEPEND="
 	dev-db/sqlite:3
 	>=dev-libs/popt-1.10
