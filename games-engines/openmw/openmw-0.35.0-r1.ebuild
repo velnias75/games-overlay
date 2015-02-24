@@ -18,7 +18,7 @@ IUSE="doc devtools"
 # XXX static build
 RDEPEND="
 	app-arch/unshield
-	>=dev-games/mygui-3.2.1
+	>=dev-games/mygui-3.2.1[ogre]
 	>=dev-games/ogre-1.9.0[freeimage,ois,opengl,zip]
 	>=dev-libs/boost-1.46.0
 	dev-libs/tinyxml
@@ -41,12 +41,8 @@ src_configure() {
 		-DBINDIR="/usr/bin"
 		$(cmake-utils_use_build devtools BSATOOL)
 		$(cmake-utils_use_build devtools ESMTOOL)
-		-DBUILD_LAUNCHER=ON
-		-DBUILD_WIZARD=ON
-		-DMWINIIMPORTER=ON
-		-DBUILD_MYGUI_PLUGIN=ON
 		$(cmake-utils_use_build devtools OPENCS)
-		-DUNITTESTS=OFF
+		-DBUILD_UNITTESTS=OFF
 		-DDATADIR="/usr/share/${PN}"
 		-DICONDIR="/usr/share/icons/hicolor/256x256/apps"
 		-DLIBDIR="/usr/$(get_libdir)"
@@ -69,7 +65,7 @@ src_compile() {
 
 src_install() {
 	cmake-utils_src_install
-	dodoc readme.txt
+	dodoc README.md
 
 	# about 46835 files, dodoc seems to have trouble
 	if use doc ; then
