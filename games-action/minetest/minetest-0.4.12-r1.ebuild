@@ -12,7 +12,7 @@ SRC_URI="http://github.com/minetest/minetest/tarball/${PV} -> ${P}.tar.gz"
 LICENSE="LGPL-2.1+ CC-BY-SA-3.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="+curl dedicated leveldb luajit nls redis +server +sound +truetype"
+IUSE="+curl dedicated doc leveldb luajit nls redis +server +sound +truetype"
 
 RDEPEND="dev-db/sqlite:3
 	sys-libs/zlib
@@ -38,10 +38,12 @@ RDEPEND="dev-db/sqlite:3
 	redis? ( dev-libs/hiredis )"
 DEPEND="${RDEPEND}
 	>=dev-games/irrlicht-1.8-r2
+	doc? ( app-doc/doxygen media-gfx/graphviz )
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
 	if use server || use dedicated ; then
+		enewgroup ${PN}
 		enewuser ${PN} -1 -1 /var/lib/${PN} ${PN}
 	fi
 }
@@ -52,8 +54,8 @@ src_unpack() {
 
 src_prepare() {
 	epatch \
-		"${FILESDIR}"/${P}-shared-irrlicht.patch \
-		"${FILESDIR}"/${P}-as-needed.patch
+		"${FILESDIR}"/${PN}-0.4.10-shared-irrlicht.patch \
+		"${FILESDIR}"/${PN}-0.4.10-as-needed.patch
 
 	# correct gettext behavior
 	if [[ -n "${LINGUAS+x}" ]] ; then
@@ -66,7 +68,6 @@ src_prepare() {
 
 	# jthread is modified
 	# json is modified
-	rm -r src/sqlite || die
 
 	# set paths
 	sed \
@@ -102,6 +103,10 @@ src_configure() {
 
 src_compile() {
 	cmake-utils_src_compile
+
+	if use doc ; then
+		emake -C "${CMAKE_BUILD_DIR}" doc
+	fi
 }
 
 src_install() {
@@ -110,6 +115,11 @@ src_install() {
 	if use server || use dedicated ; then
 		newinitd "${FILESDIR}"/minetestserver.initd minetest-server
 		newconfd "${T}"/minetestserver.confd minetest-server
+	fi
+
+	if use doc ; then
+		cd "${CMAKE_BUILD_DIR}"/doc || die
+		dodoc -r html
 	fi
 }
 
