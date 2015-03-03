@@ -14,13 +14,13 @@ DESCRIPTION="Daemon engine, a fork of OpenWolf which powers the game Unvanquishe
 HOMEPAGE="http://unvanquished.net/"
 SRC_URI="https://github.com/${MY_PN}/${MY_PN}/tarball/v${PV}
 	-> ${P}.tar.gz
-	x86? ( http://dl.unvanquished.net/deps/linux32-2.tar.bz2 -> unvanquished-${PV}-external-x86-2.tar.bz2 )
-	amd64? ( http://dl.unvanquished.net/deps/linux64-2.tar.bz2 -> unvanquished-${PV}-external-amd64-2.tar.bz2 )"
+	x86? ( http://dl.unvanquished.net/deps/linux32-3.tar.bz2 -> unvanquished-${PV}-external-x86-3.tar.bz2 )
+	amd64? ( http://dl.unvanquished.net/deps/linux64-3.tar.bz2 -> unvanquished-${PV}-external-amd64-3.tar.bz2 )"
 
 LICENSE="GPL-3 CC-BY-SA-2.5 CC-BY-SA-3.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="dedicated geoip +optimization sdl2 +server +smp +voip"
+IUSE="dedicated geoip +optimization +server +smp"
 
 RDEPEND="
 	dev-libs/nettle[gmp]
@@ -33,6 +33,7 @@ RDEPEND="
 		media-libs/glew
 		media-libs/libogg
 		media-libs/libpng:0
+		media-libs/libsdl2[X,opengl,video]
 		media-libs/libtheora
 		media-libs/libvorbis
 		media-libs/libwebp
@@ -43,15 +44,11 @@ RDEPEND="
 		virtual/jpeg
 		virtual/opengl
 		x11-libs/libX11
-		sdl2? ( media-libs/libsdl2[X,opengl,video] )
-		!sdl2? ( media-libs/libsdl[X,opengl,video] )
 		server? ( app-misc/screen )
-		voip? ( media-libs/speex )
 	)
 	dedicated? (
 		app-misc/screen
 		sys-libs/ncurses
-		voip? ( media-libs/speex )
 	)
 	geoip? ( dev-libs/geoip )"
 DEPEND="${RDEPEND}
@@ -79,11 +76,11 @@ pkg_setup() {
 src_unpack() {
 	default
 	mv Unvanquished-Unvanquished-* "${S}" || die
-	mv "linux$(usex amd64 "64" "32")-2" "${S}"/external_deps/ || die
+	mv "linux$(usex amd64 "64" "32")-3" "${S}"/external_deps/ || die
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-0.31.0-flags.patch
+	epatch "${FILESDIR}"/${PN}-0.37.0-flags.patch
 }
 
 src_configure() {
@@ -101,8 +98,9 @@ src_configure() {
 		$(usex dedicated "-DBUILD_CLIENT=OFF" "-DBUILD_CLIENT=ON")
 		-DBUILD_TTY_CLIENT=ON
 		$(usex dedicated "-DBUILD_SERVER=ON" "$(cmake-utils_use_build server SERVER)")
-		$(cmake-utils_use_use voip VOIP)
-		$(cmake-utils_use_use sdl2 SDL2)
+		# https://github.com/Unvanquished/Unvanquished/issues/646
+		# $(cmake-utils_use_use voip VOIP)
+		-DUSE_VOIP=0
 		$(cmake-utils_use_use smp SMP)
 		$(cmake-utils_use_use geoip GEOIP)
 	)
