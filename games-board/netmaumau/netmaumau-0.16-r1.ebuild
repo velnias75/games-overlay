@@ -32,6 +32,10 @@ DEPEND="
 
 S=${WORKDIR}/${P}-client
 
+src_prepare() {
+	epatch "${FILESDIR}/connect-to-old-servers.patch"
+}
+
 src_configure() {
 	if use espeak; then USE_ESPEAK='CONFIG+=espeak'; fi
 	eqmake4 $USE_ESPEAK
