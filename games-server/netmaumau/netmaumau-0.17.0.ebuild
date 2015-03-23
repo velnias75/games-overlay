@@ -15,8 +15,10 @@ SLOT="0/9"
 KEYWORDS="~amd64 ~x86"
 IUSE="branding cli-client dedicated doc static-libs"
 
+# use Lua slot 5.1 if working
 RDEPEND="
 	dev-db/sqlite:3
+	<dev-lang/lua-5.2
 	>=dev-libs/popt-1.10
 	>=sci-libs/gsl-1.9
 	sys-apps/file
