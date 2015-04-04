@@ -19,13 +19,14 @@ IUSE="development doc examples"
 REQUIRED_USE="examples? ( development )"
 
 RDEPEND="
-	>=app-eselect/eselect-renpy-0.3
+	>=app-eselect/eselect-renpy-0.6
 	dev-libs/fribidi
-	dev-python/pygame[X,${PYTHON_USEDEP}]
+	>=dev-python/pygame_sdl2-6.99[${PYTHON_USEDEP}]
+	<dev-python/pygame_sdl2-7[${PYTHON_USEDEP}]
 	>=dev-lang/python-exec-0.3[${PYTHON_USEDEP}]
 	media-libs/glew
 	media-libs/libpng:0
-	media-libs/libsdl[X,video]
+	media-libs/libsdl2[video]
 	media-libs/freetype:2
 	sys-libs/zlib
 	virtual/ffmpeg"
@@ -77,7 +78,7 @@ python_install() {
 
 python_install_all() {
 	if use development; then
-		newicon -s 32 launcher/game/logo32.png ${P}.png
+		newicon -s 32 launcher/game/images/logo32.png ${P}.png
 		make_desktop_entry ${PN}-${SLOT} "Ren'Py ${PV}" ${P}
 	fi
 
