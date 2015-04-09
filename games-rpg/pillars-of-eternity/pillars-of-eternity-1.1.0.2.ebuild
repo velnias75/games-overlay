@@ -10,9 +10,9 @@ DESCRIPTION="Pillars Of Eternity"
 HOMEPAGE="http://www.gog.com/game/pillars_of_eternity_hero_edition"
 
 BASE_SRC_URI="gog_pillars_of_eternity_${PV}.tar.gz"
-DLC1_SRC_URI="gog_pillars_of_eternity_dlc1_${PV}.tar.gz "
-DLC2_SRC_URI="gog_pillars_of_eternity_dlc2_${PV}.tar.gz "
-DLC3_SRC_URI="gog_pillars_of_eternity_dlc3_${PV}.tar.gz"
+DLC1_SRC_URI="gog_pillars_of_eternity_dlc1_1.0.0.1.tar.gz "
+DLC2_SRC_URI="gog_pillars_of_eternity_dlc2_1.0.0.1.tar.gz "
+DLC3_SRC_URI="gog_pillars_of_eternity_dlc3_1.0.0.1.tar.gz"
 SRC_URI="${BASE_SRC_URI}
 	dlc1? ( ${DLC1_SRC_URI} )
 	dlc2? ( ${DLC2_SRC_URI} )
@@ -51,7 +51,7 @@ pkg_nofetch() {
 
 src_prepare() {
 	# rm steam stuff
-	rm game/{libsteam_api.so,steam_api.dll,steam_appid.txt,SteamworksNative.dll} || die
+	rm game/libsteam_api.so || die
 	rm game/PillarsOfEternity_Data/Plugins/x86_64/{libCSteamworks,libsteam_api}.so || die
 }
 
