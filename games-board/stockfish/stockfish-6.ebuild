@@ -7,21 +7,18 @@ inherit eutils toolchain-funcs
 
 DESCRIPTION="A UCI chess engine"
 HOMEPAGE="http://www.stockfishchess.com/"
-SRC_URI="https://s3.amazonaws.com/stockfish/stockfish-dd-src.zip -> ${P}.zip"
+SRC_URI="https://stockfish.s3.amazonaws.com/stockfish-${PV}-src.zip -> ${P}.zip"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="cpu_flags_x86_sse"
+RESTRICT="mirror"
 
 RDEPEND=""
 DEPEND="app-arch/unzip"
 
-S="${WORKDIR}/stockfish-dd-src/src"
-
-src_prepare() {
-	epatch "${FILESDIR}"/${P}-make.patch
-}
+S="${WORKDIR}/stockfish-${PV}-src/src"
 
 src_compile() {
 	emake CXX="$(tc-getCXX)" CXXFLAGS="${CXXFLAGS}" \
@@ -45,4 +42,3 @@ pkg_postinst() {
 	elog "      opponent. Have fun."
 	elog
 }
-
