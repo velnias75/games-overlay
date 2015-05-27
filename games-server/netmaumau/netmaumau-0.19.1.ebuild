@@ -13,7 +13,7 @@ SRC_URI="https://github.com/velnias75/NetMauMau/archive/V${PV}.tar.gz -> ${P}-se
 LICENSE="LGPL-3"
 SLOT="0/11"
 KEYWORDS="~amd64 ~x86"
-IUSE="branding cli-client dedicated doc static-libs"
+IUSE="branding console-client dedicated doc static-libs"
 
 # use Lua slot 5.1 if working
 RDEPEND="
@@ -43,7 +43,7 @@ src_configure() {
 	econf \
 		$(use_enable !dedicated client) \
 		--enable-xinetd \
-		$(usex dedicated "--disable-cli-client" "$(use_enable cli-client)") \
+		$(usex dedicated "--disable-console-client" "$(use_enable console-client)") \
 		$(use_enable doc apidoc) \
 		--docdir=/usr/share/doc/${PF} \
 		--localstatedir=/var/lib/games/ \
