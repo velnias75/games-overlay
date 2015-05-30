@@ -17,6 +17,7 @@ IUSE="branding console-client dedicated doc static-libs"
 
 # use Lua slot 5.1 if working
 RDEPEND="
+	!<app-shells/bash-completion-1.3-r2
 	dev-db/sqlite:3
 	<dev-lang/lua-5.2
 	>=dev-libs/popt-1.10
