@@ -61,6 +61,17 @@ src_install() {
 }
 
 pkg_postinst() {
+
+	# if there is a running nmm-server started by xinetd
+	# than it get stopped, so the next connection attempt
+	# will use the newly installed instance
+	if [ -n "`pgrep -f "nmm-server"`" ]; then
+                if [ -n "`pgrep -f "inetd"`" ]; then
+                        elog "Stopping nmm-server…"
+                        killall nmm-server
+                fi
+        fi
+
 	if ! use dedicated ; then
 		elog "This is only the server part, you might want to install"
 		elog "the client too:"
