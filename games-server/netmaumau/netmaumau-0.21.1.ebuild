@@ -11,7 +11,7 @@ HOMEPAGE="http://sourceforge.net/projects/netmaumau"
 SRC_URI="https://github.com/velnias75/NetMauMau/archive/V${PV}.tar.gz -> ${P}-server.tar.gz"
 
 LICENSE="LGPL-3"
-SLOT="0/12"
+SLOT="0/13"
 KEYWORDS="~amd64 ~x86"
 IUSE="branding console-client dedicated doc static-libs"
 
@@ -69,7 +69,7 @@ pkg_postinst() {
                 if [ -n "`pgrep -f "inetd"`" ]; then
 			elog "Detected a NetMauMau server started from (x)inetd."
                         elog "Stopping nmm-server to spawn the newly installed instance at next request…"
-                        killall nmm-server
+                        killall nmm-server 2> /dev/null
                 fi
         fi
 
