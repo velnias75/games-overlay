@@ -18,6 +18,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="+espeak"
 
 RDEPEND="
+	dev-libs/qjson
 	dev-qt/qtcore:4[exceptions]
 	dev-qt/qtgui:4[exceptions]
 	dev-qt/qtsvg:4[exceptions]
