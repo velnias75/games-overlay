@@ -23,6 +23,7 @@ RDEPEND="
 	dev-qt/qtcore:4[exceptions]
 	dev-qt/qtgui:4[exceptions]
 	dev-qt/qtsvg:4[exceptions]
+	dev-qt/qtsingleapplication[qt4]
 	espeak? ( || ( app-accessibility/espeak[portaudio] app-accessibility/espeak[pulseaudio] ) )
 	games-server/netmaumau:0/13[-dedicated]
 "
@@ -36,7 +37,7 @@ S=${WORKDIR}/${P}-client
 
 src_configure() {
 	if use espeak; then USE_ESPEAK='CONFIG+=espeak'; fi
-	eqmake4 $USE_ESPEAK
+	eqmake4 CONFIG+=system_qtsingleapplication $USE_ESPEAK
 	lrelease -compress -nounfinished -removeidentical -silent src/src.pro
 }
 
