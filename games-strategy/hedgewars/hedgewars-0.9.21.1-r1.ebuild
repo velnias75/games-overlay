@@ -58,6 +58,7 @@ DEPEND="${CDEPEND}
 		dev-haskell/sha
 		dev-haskell/utf8-string
 		dev-haskell/vector
+		dev-haskell/zlib
 		>=dev-lang/ghc-7.0
 	)
 "
