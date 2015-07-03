@@ -19,7 +19,7 @@ IUSE="+espeak"
 
 RDEPEND="
 	dev-libs/libnotify-qt
-	dev-libs/qgithubreleaseapi
+	dev-libs/qgithubreleaseapi[qt4]
 	dev-qt/qtcore:4[exceptions]
 	dev-qt/qtgui:4[exceptions]
 	dev-qt/qtsvg:4[exceptions]
@@ -36,16 +36,30 @@ DEPEND="
 S=${WORKDIR}/${P}-client
 
 src_configure() {
+
+	if [ -f "${S}/src/src.pro" ]; then
+                MY_SRCDIR="${S}/src"
+        elif [ -f "${S}/src.pro" ]; then
+                MY_SRCDIR="${S}"
+        else
+                die "Cannot find src.pro"
+        fi
+
+	lrelease -compress -nounfinished -removeidentical -silent "${MY_SRCDIR}/src.pro"
+
 	if use espeak; then USE_ESPEAK='CONFIG+=espeak'; fi
 	eqmake4 CONFIG+=system_qtsingleapplication $USE_ESPEAK
-	lrelease -compress -nounfinished -removeidentical -silent src/src.pro
 }
 
 src_install() {
-	dobin src/nmm-qt-client
-	dodoc src/THANKS
-	doicon -s 256 src/nmm_qt_client.png
-	domenu src/nmm_qt_client.desktop
+
+	dobin "${MY_SRCDIR}/nmm-qt-client"
+	dodoc "${MY_SRCDIR}/THANKS"
+	doicon -s 256 "${MY_SRCDIR}/nmm_qt_client.png"
+	domenu "${MY_SRCDIR}/nmm_qt_client.desktop"
 	insinto /usr/share/nmm-qt-client
-	doins src/*.qm
+
+	for MYQM in `find "${S}" -name '*.qm'` ; do
+		doins "${MYQM}"
+	done
 }
