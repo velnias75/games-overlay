@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit qmake-utils eutils vcs-snapshot
+inherit qmake-utils eutils vcs-snapshot fdo-mime gnome2-utils
 
 MY_P=nmm-qt-client${PV}
 
@@ -62,4 +62,14 @@ src_install() {
 	for MYQM in `find "${S}" -name '*.qm'` ; do
 		doins "${MYQM}"
 	done
+}
+
+pkg_postinst() {
+	fdo-mime_desktop_database_update
+	gnome2_icon_cache_update
+}
+
+pkg_postrm() {
+	fdo-mime_desktop_database_update
+	gnome2_icon_cache_update
 }
