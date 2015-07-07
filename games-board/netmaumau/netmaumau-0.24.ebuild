@@ -48,7 +48,7 @@ src_configure() {
 	lrelease -compress -nounfinished -removeidentical -silent "${MY_SRCDIR}/src.pro"
 
 	if use espeak; then USE_ESPEAK='CONFIG+=espeak'; fi
-	eqmake4 CONFIG+=system_qtsingleapplication $USE_ESPEAK
+	eqmake4 CONFIG+=system_qtsingleapplication CONFIG+=notify-qt $USE_ESPEAK
 }
 
 src_install() {
