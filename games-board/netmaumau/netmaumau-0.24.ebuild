@@ -18,7 +18,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="+espeak"
 
 RDEPEND="
-	dev-libs/libnotify-qt
+	dev-libs/libnotify-qt[qt4]
 	dev-libs/qgithubreleaseapi[qt4]
 	dev-qt/qtcore:4[exceptions]
 	dev-qt/qtgui:4[exceptions]
