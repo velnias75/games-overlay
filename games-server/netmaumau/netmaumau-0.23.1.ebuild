@@ -27,6 +27,7 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	dev-util/xxdi
 	doc? ( >=app-doc/doxygen-1.8.0[dot] )
+	sys-apps/gawk
 	sys-apps/help2man
 	virtual/pkgconfig
 "
