@@ -13,13 +13,14 @@ SRC_URI="https://github.com/velnias75/NetMauMau/archive/V${PV}.tar.gz -> ${P}-se
 LICENSE="LGPL-3"
 SLOT="0/13"
 KEYWORDS="~amd64 ~x86"
-IUSE="branding console-client dedicated doc static-libs"
+IUSE="branding console-client dedicated doc http static-libs"
 
 # use Lua slot 5.1 if working
 RDEPEND="
 	dev-db/sqlite:3
 	<dev-lang/lua-5.2
 	>=dev-libs/popt-1.10
+	http? ( net-libs/libmicrohttpd )
 	>=sci-libs/gsl-1.9
 	sys-apps/file
 "
@@ -51,7 +52,8 @@ src_configure() {
 		--localstatedir=/var/lib/games/ \
 		$(use_enable static-libs static) \
 		"$(use_enable branding ai-name 'Gentoo Hero')" \
-		$(use_enable branding ai-image "${FILESDIR}"/gblend.png)
+		$(use_enable branding ai-image "${FILESDIR}"/gblend.png) \
+		$(use_enable http webserver)
 }
 
 src_install() {
