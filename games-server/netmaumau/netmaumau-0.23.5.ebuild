@@ -23,6 +23,7 @@ RDEPEND="
 	http? ( net-libs/libmicrohttpd )
 	>=sci-libs/gsl-1.9
 	sys-apps/file
+	sys-libs/zlib
 "
 
 DEPEND="${RDEPEND}
