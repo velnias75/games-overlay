@@ -23,7 +23,7 @@ RDEPEND="
 	http? ( net-libs/libmicrohttpd )
 	>=sci-libs/gsl-1.9
 	sys-apps/file
-	sys-libs/zlib
+	http? ( sys-libs/zlib )
 "
 
 DEPEND="${RDEPEND}
@@ -54,7 +54,8 @@ src_configure() {
 		$(use_enable static-libs static) \
 		"$(use_enable branding ai-name 'Gentoo Hero')" \
 		$(use_enable branding ai-image "${FILESDIR}"/gblend.png) \
-		$(use_enable http webserver)
+		$(use_enable http webserver) \
+		$(use_with http zlib "${ROOT}"/usr)
 }
 
 src_install() {
