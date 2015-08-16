@@ -12,16 +12,15 @@ SRC_URI="mirror://sourceforge/freeciv/${P}.tar.bz2"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~ppc ~ppc64 ~x86"
-IUSE="auth aimodules dedicated +gtk ipv6 mapimg modpack mysql nls postgres readline sdl +server +sound sqlite"
+IUSE="auth aimodules dedicated +gtk ipv6 mapimg modpack mysql nls postgres qt5 readline sdl +server +sound sqlite"
 
 RDEPEND="app-arch/bzip2
 	app-arch/xz-utils
-	dev-lang/lua
 	net-misc/curl
 	sys-libs/zlib
 	auth? (
 		mysql? ( virtual/mysql )
-		postgres? ( virtual/postgresql )
+		postgres? ( dev-db/postgresql:* )
 		sqlite? ( dev-db/sqlite:3 )
 		!mysql? ( !postgres? ( !sqlite? ( virtual/mysql ) ) )
 	)
@@ -33,17 +32,23 @@ RDEPEND="app-arch/bzip2
 		mapimg? ( media-gfx/imagemagick )
 		modpack? ( x11-libs/gtk+:3 )
 		nls? ( virtual/libintl )
+		qt5? (
+			dev-qt/qtcore:5
+			dev-qt/qtgui:5
+			dev-qt/qtwidgets:5
+		)
 		sdl? (
 			media-libs/libsdl[video]
+			media-libs/sdl-gfx
 			media-libs/sdl-image[png]
-			media-libs/freetype:2
+			media-libs/sdl-ttf
 		)
 		server? ( aimodules? ( sys-devel/libtool:2 ) )
 		sound? (
 			media-libs/libsdl[sound]
 			media-libs/sdl-mixer[vorbis]
 		)
-		!sdl? ( !gtk? ( x11-libs/gtk+:2 ) )
+		!sdl? ( !gtk? ( x11-libs/gtk+:3 ) )
 	)"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
@@ -52,7 +57,7 @@ DEPEND="${RDEPEND}
 		nls? ( sys-devel/gettext )
 	)"
 
-pkg_setup() {
+pkg_pretend() {
 	if use !dedicated && use !server ; then
 		ewarn "Disabling server USE flag will make it impossible"
 		ewarn "to start local games, but you will still be able to"
@@ -61,7 +66,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-
 	# install the .desktop in /usr/share/applications
 	# install the icons in /usr/share/pixmaps
 	sed -i \
@@ -70,7 +74,7 @@ src_prepare() {
 		-e 's:^\(icon[0-9]*dir = \)$(datadir)\(.*\):\1/usr/share\2:' \
 		client/Makefile.in \
 		server/Makefile.in \
-		modinst/Makefile.in \
+		tools/Makefile.in \
 		data/Makefile.in \
 		data/icons/Makefile.in || die
 	sed -i -e 's/=SDL/=X-SDL/' bootstrap/freeciv-sdl.desktop.in || die
@@ -97,13 +101,14 @@ src_configure() {
 		myclient="no"
 		myopts="--enable-server"
 	else
-		if use !sdl && use !gtk ; then
+		if use !sdl && use !gtk && use !qt5 ; then
 			einfo "No client backend given, defaulting to"
-			einfo "gtk2 client!"
-			myclient="gtk2"
+			einfo "gtk3 client!"
+			myclient="gtk3"
 		else
 			use sdl && myclient="${myclient} sdl"
 			use gtk && myclient="${myclient} gtk3"
+			use qt5 && myclient="${myclient} qt"
 		fi
 		myopts="$(use_enable server) --without-ggz-client"
 	fi
@@ -121,7 +126,7 @@ src_configure() {
 		$(use_with readline) \
 		$(use_enable sound sdl-mixer) \
 		--enable-fcmp="$(usex modpack "gtk3" "no")" \
-		--enable-sys-lua \
+		--disable-sys-lua \
 		${myopts} \
 		--enable-client="${myclient}"
 }
@@ -131,7 +136,7 @@ src_install() {
 
 	if use dedicated ; then
 		rm -rf "${D}/usr/share/pixmaps"
-		rm -f "${D}"/usr/share/man/man6/freeciv-{client,gtk2,gtk3,modpack,sdl,xaw}*
+		rm -f "${D}"/usr/share/man/man6/freeciv-{client,gtk2,gtk3,qt,modpack,sdl,xaw}*
 	else
 		if use server ; then
 			# Create and install the html manual. It can't be done for dedicated
@@ -139,7 +144,7 @@ src_install() {
 			# delete freeciv-manual from /usr/bin, because it's useless.
 			# Note: to have it localized, it should be ran from _postinst, or
 			# something like that, but then it's a PITA to avoid orphan files...
-			./manual/freeciv-manual || die
+			./tools/freeciv-manual || die
 			dohtml manual*.html
 		fi
 		if use sdl ; then
@@ -165,4 +170,3 @@ pkg_postinst() {
 pkg_postrm() {
 	gnome2_icon_cache_update
 }
-

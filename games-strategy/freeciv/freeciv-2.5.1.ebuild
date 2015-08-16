@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -20,7 +20,7 @@ RDEPEND="app-arch/bzip2
 	sys-libs/zlib
 	auth? (
 		mysql? ( virtual/mysql )
-		postgres? ( virtual/postgresql )
+		postgres? ( dev-db/postgresql:* )
 		sqlite? ( dev-db/sqlite:3 )
 		!mysql? ( !postgres? ( !sqlite? ( virtual/mysql ) ) )
 	)
@@ -57,7 +57,7 @@ DEPEND="${RDEPEND}
 		nls? ( sys-devel/gettext )
 	)"
 
-pkg_setup() {
+pkg_pretend() {
 	if use !dedicated && use !server ; then
 		ewarn "Disabling server USE flag will make it impossible"
 		ewarn "to start local games, but you will still be able to"
