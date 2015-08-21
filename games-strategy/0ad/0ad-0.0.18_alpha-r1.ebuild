@@ -23,6 +23,7 @@ RDEPEND="
 	dev-libs/boost
 	dev-libs/icu:=
 	dev-libs/libxml2
+	dev-libs/nspr
 	~games-strategy/0ad-data-${PV}
 	media-libs/libpng:0
 	media-libs/libsdl2[X,opengl,video]
@@ -30,7 +31,7 @@ RDEPEND="
 	net-libs/miniupnpc
 	net-misc/curl
 	sys-libs/zlib
-	virtual/jpeg
+	virtual/jpeg:62
 	virtual/opengl
 	x11-libs/libX11
 	x11-libs/libXcursor
