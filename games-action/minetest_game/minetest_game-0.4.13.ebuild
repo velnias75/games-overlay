@@ -3,18 +3,18 @@
 # $Id$
 
 EAPI=5
-inherit git-r3
+inherit vcs-snapshot
 
 DESCRIPTION="The main game for the Minetest game engine"
 HOMEPAGE="http://github.com/minetest/minetest_game"
-EGIT_REPO_URI="git://github.com/minetest/${PN}.git"
+SRC_URI="http://github.com/minetest/minetest_game/tarball/${PV} -> ${P}.tar.gz"
 
 LICENSE="GPL-2 CC-BY-SA-3.0"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-RDEPEND="~games-action/minetest-${PV}"
+RDEPEND=">=games-action/minetest-${PV}"
 
 src_install() {
 	insinto /usr/share/minetest/games/${PN}

@@ -1,18 +1,18 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
 EAPI=5
 
 CDROM_OPTIONAL="yes"
-inherit eutils cdrom
+inherit eutils cdrom unpacker
 
-GOG_FILE="gog_duke_nukem_3d_1.0.0.7.tar.gz"
+GOG_FILE="gog_duke_nukem_3d_atomic_edition_2.0.0.8.sh"
 DESCRIPTION="Duke Nukem 3D data files"
 HOMEPAGE="http://www.3drealms.com/"
 SRC_URI="gog? ( ${GOG_FILE} )"
 
-LICENSE="DUKE3D"
+LICENSE="DUKE3D gog? ( GOG-EULA )"
 SLOT="0"
 KEYWORDS="~amd64 ~hppa ~ppc ~x86"
 IUSE="gog"
@@ -20,6 +20,7 @@ REQUIRED_USE="^^ ( cdinstall gog )"
 RESTRICT="mirror bindist gog? ( fetch )"
 
 RDEPEND="|| ( games-fps/eduke32 games-fps/duke3d )"
+DEPEND="gog? ( app-arch/unzip )"
 
 S=${WORKDIR}
 
@@ -44,8 +45,8 @@ src_unpack() {
 			die "Error locating data files.";
 		fi
 	else
-		unpack "${GOG_FILE}"
-		cd "Duke Nukem 3D/data" || die
+		unpack_zip "${DISTDIR}"/${GOG_FILE}
+		cd data/noarch/data || die
 
 		# convert to lowercase
 		find . -type f \
@@ -70,6 +71,6 @@ src_install() {
 		# avoid double slash
 		doins "${CDROM_ROOT}"/${DATAROOT}{duke3d.grp,duke.rts,game.con,user.con,demo?.dmo,defs.con}
 	else
-		doins "Duke Nukem 3D/data"/{duke3d.grp,duke.rts,game.con,user.con,demo?.dmo,defs.con}
+		doins data/noarch/data/{duke3d.grp,duke.rts,game.con,user.con,demo?.dmo,defs.con}
 	fi
 }
