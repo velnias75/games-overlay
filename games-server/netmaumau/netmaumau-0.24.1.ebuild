@@ -13,7 +13,7 @@ SRC_URI="https://github.com/velnias75/NetMauMau/archive/V${PV}.tar.gz -> ${P}-se
 LICENSE="LGPL-3"
 SLOT="0/14"
 KEYWORDS="~amd64 ~x86"
-IUSE="branding console-client dedicated doc http static-libs"
+IUSE="branding console-client dedicated doc http static-libs threads"
 
 # use Lua slot 5.1 if working
 RDEPEND="
@@ -55,6 +55,7 @@ src_configure() {
 		"$(use_enable branding ai-name 'Gentoo Hero')" \
 		$(use_enable branding ai-image "${FILESDIR}"/gblend.png) \
 		$(use_enable http webserver) \
+		$(use_enable threads) \
 		$(use_with http zlib "${ROOT}"/usr)
 }
 
