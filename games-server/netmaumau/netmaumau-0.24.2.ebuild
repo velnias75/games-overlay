@@ -15,6 +15,8 @@ SLOT="0/14"
 KEYWORDS="~amd64 ~x86"
 IUSE="branding console-client dedicated doc http static-libs threads"
 
+REQUIRED_USE="http? ( threads )"
+
 # use Lua slot 5.1 if working
 RDEPEND="
 	dev-db/sqlite:3
