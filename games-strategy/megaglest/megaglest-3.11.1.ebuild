@@ -16,10 +16,10 @@ SRC_URI="https://github.com/MegaGlest/megaglest-source/releases/download/${PV}/m
 LICENSE="GPL-3 BitstreamVera"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="debug +editor fribidi sse sse2 sse3 static +streflop +tools +unicode wxuniversal +model-viewer videos"
+IUSE="debug +editor fribidi cpu_flags_x86_sse cpu_flags_x86_sse2 cpu_flags_x86_sse3 static +streflop +tools +unicode wxuniversal +model-viewer videos"
 
 RDEPEND="
-	>=dev-lang/lua-5.1
+	>=dev-lang/lua-5.1:0
 	dev-libs/libxml2
 	media-libs/fontconfig
 	media-libs/freetype
@@ -43,11 +43,10 @@ RDEPEND="
 		net-libs/libircclient
 		>=net-libs/miniupnpc-1.8
 		net-misc/curl
-		virtual/jpeg
+		virtual/jpeg:0
 		)
 	videos? ( media-video/vlc )"
 DEPEND="${RDEPEND}
-	sys-apps/help2man
 	virtual/pkgconfig
 	editor? ( ${VIRTUALX_DEPEND} )
 	model-viewer? ( ${VIRTUALX_DEPEND} )
@@ -60,7 +59,7 @@ DEPEND="${RDEPEND}
 		net-libs/libircclient[static-libs]
 		net-libs/miniupnpc[static-libs]
 		net-misc/curl[static-libs]
-		virtual/jpeg[static-libs]
+		virtual/jpeg:0[static-libs]
 	)"
 PDEPEND="~games-strategy/${PN}-data-${PV}"
 
@@ -70,15 +69,23 @@ src_prepare() {
 		need-wxwidgets unicode
 	fi
 
-	epatch "${FILESDIR}"/${PN}-3.9.1-static-build.patch
+	# help2man rules are currently broken for ninja, just skip this,
+	# not vital stuff anyway, just duplicated --help info
+	sed -i \
+		-e '/FIND_PROGRAM(HELP2MAN/d' \
+		CMakeLists.txt source/*/CMakeLists.txt || die
+
+	epatch "${FILESDIR}"/${PN}-3.9.1-static-build.patch \
+		"${FILESDIR}"/${P}-cmake.patch \
+		"${FILESDIR}"/${P}-miniupnpc.patch
 }
 
 src_configure() {
-	if use sse3; then
+	if use cpu_flags_x86_sse3; then
 		SSE=3
-	elif use sse2; then
+	elif use cpu_flags_x86_sse2; then
 		SSE=2
-	elif use sse; then
+	elif use cpu_flags_x86_sse; then
 		SSE=1
 	else
 		SSE=0
@@ -114,15 +121,21 @@ src_configure() {
 
 src_compile() {
 	if use editor || use model-viewer; then
-		VIRTUALX_COMMAND="cmake-utils_src_compile" virtualmake
+		# work around parallel make issues - bug #561380
+		MAKEOPTS="-j1 ${MAKEOPTS}" \
+			VIRTUALX_COMMAND="cmake-utils_src_compile" virtualmake
 	else
 		cmake-utils_src_compile
 	fi
 }
 
 src_install() {
-	# rebuilds some targets randomly without fast option
-	emake -C "${CMAKE_BUILD_DIR}" DESTDIR="${D}" "$@" install/fast
+	if [[ ${CMAKE_MAKEFILE_GENERATOR} != emake ]] ; then
+		cmake-utils_src_install
+	else
+		# rebuilds some targets randomly without fast option
+		emake -C "${BUILD_DIR}" DESTDIR="${D}" "$@" install/fast
+	fi
 
 	dodoc docs/{AUTHORS.source_code,CHANGELOG,README}.txt
 	doicon -s 48 ${PN}.png
