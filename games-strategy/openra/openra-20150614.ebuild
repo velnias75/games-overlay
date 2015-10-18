@@ -25,7 +25,8 @@ Mono_Nat="${NG_SRC}/Mono.Nat/1.2.21 -> Mono_Nat-1.2.21.zip"
 FuzzyLogicLibrary="${NG_SRC}/FuzzyLogicLibrary/1.2.0 -> FuzzyLogicLibrary-1.2.0.zip"
 SDL2CS="https://github.com/OpenRA/SDL2-CS/releases/download/20140407/SDL2-CS.dll -> SDL2-CS.dll.20140407"
 Eluant="https://github.com/OpenRA/Eluant/releases/download/20140425/Eluant.dll -> Eluant.dll.20140425"
-GEO_IP_DB="http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz"
+# unfortunately, this may randomly change
+GEO_IP_DB="http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz -> GeoLite2-Country-2015-10-18.mmdb.gz"
 
 SRC_URI="${SRC_URI}
 ${StyleCopPlus_MSBuild}
@@ -51,7 +52,7 @@ IUSE=""
 RESTRICT="mirror"
 
 LUA_V=5.1.5
-DEPEND="dev-dotnet/libgdiplus
+RDEPEND="dev-dotnet/libgdiplus
 	~dev-lang/lua-${LUA_V}:0
 	dev-lang/mono
 	media-libs/freetype:2
@@ -59,7 +60,8 @@ DEPEND="dev-dotnet/libgdiplus
 	media-libs/openal
 	virtual/jpeg
 	virtual/opengl"
-RDEPEND="${DEPEND}"
+DEPEND="${RDEPEND}
+	app-arch/unzip"
 
 S=${WORKDIR}/OpenRA-release-${PV}
 
@@ -75,12 +77,12 @@ src_unpack() {
 
 	mkdir "${S}"/thirdparty/download || die
 	get() {
+		# don't add dies here
 		local archive="${1/./_}"
 		local version="${2}"
-		mkdir -p "${S}"/thirdparty/download/${1} || die
-		cd "${S}"/thirdparty/download/${1} || die
-		unpack ${archive}-${version}.zip
-		cd "${S}"/thirdparty/download || die
+		mkdir -p "${S}"/thirdparty/download/${1}
+		unzip -o -qq "${DISTDIR}"/${archive}-${version}.zip \
+			-d "${S}"/thirdparty/download/${1}
 	}
 	export -f get
 	./fetch-thirdparty-deps.sh || die
@@ -88,7 +90,7 @@ src_unpack() {
 	cd "${S}"/thirdparty/download || die
 	cp "${DISTDIR}"/${SDL2CS##* } ./SDL2-CS.dll || die
 	cp "${DISTDIR}"/${Eluant##* } ./Eluant.dll || die
-	cp "${DISTDIR}"/${GEO_IP_DB##*/} . || die
+	cp "${DISTDIR}"/${GEO_IP_DB##* } ./GeoLite2-Country.mmdb.gz || die
 }
 
 src_configure() { :; }
@@ -102,7 +104,7 @@ src_prepare() {
 		"${S}"/thirdparty/Eluant.dll.config.in > Eluant.dll.config || die
 
 	cd "${S}"/thirdparty/download || die
-	cp *.dll *.dll.config ${GEO_IP_DB##*/} "${S}"/ || die
+	cp *.dll *.dll.config GeoLite2-Country.mmdb.gz "${S}"/ || die
 }
 
 src_compile() {
