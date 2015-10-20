@@ -23,7 +23,7 @@ SharpFont="${NG_SRC}/SharpFont/3.0.1 -> SharpFont-3.0.1.zip"
 NUnit="${NG_SRC}/NUnit/2.6.4 -> NUnit-2.6.4.zip"
 Mono_Nat="${NG_SRC}/Mono.Nat/1.2.21 -> Mono_Nat-1.2.21.zip"
 FuzzyLogicLibrary="${NG_SRC}/FuzzyLogicLibrary/1.2.0 -> FuzzyLogicLibrary-1.2.0.zip"
-SDL2CS="https://github.com/OpenRA/SDL2-CS/releases/download/20140407/SDL2-CS.dll -> SDL2-CS.dll.20140407"
+SDL2CS="https://github.com/OpenRA/SDL2-CS/releases/download/20150709/SDL2-CS.dll -> SDL2-CS.dll.20150709"
 Eluant="https://github.com/OpenRA/Eluant/releases/download/20140425/Eluant.dll -> Eluant.dll.20140425"
 # unfortunately, this may randomly change
 GEO_IP_DB="http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.mmdb.gz -> GeoLite2-Country-2015-10-18.mmdb.gz"
@@ -54,11 +54,11 @@ RESTRICT="mirror"
 LUA_V=5.1.5
 RDEPEND="dev-dotnet/libgdiplus
 	~dev-lang/lua-${LUA_V}:0
-	dev-lang/mono
+	>=dev-lang/mono-3.2
 	media-libs/freetype:2
 	media-libs/libsdl2[opengl,video]
 	media-libs/openal
-	virtual/jpeg
+	virtual/jpeg:0
 	virtual/opengl"
 DEPEND="${RDEPEND}
 	app-arch/unzip"
@@ -72,7 +72,8 @@ src_unpack() {
 	# if upstream has added/changed files
 	cd "${S}"/thirdparty || die
 	sed -i \
-		-e 's/^function get/function furz/' \
+		-e 's/get()/furz()/' \
+		-e 's|curl |: |' \
 		fetch-thirdparty-deps.sh || die
 
 	mkdir "${S}"/thirdparty/download || die
