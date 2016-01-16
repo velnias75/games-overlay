@@ -6,7 +6,7 @@
 
 EAPI=5
 PYTHON_COMPAT=( python2_7 )
-inherit python-r1 eutils qt5-build
+inherit python-r1 eutils qmake-utils
 
 DESCRIPTION="A modern gaming engine for Doom, Heretic, and Hexen"
 HOMEPAGE="http://www.dengine.net/"
@@ -24,9 +24,10 @@ REQUIRED_USE="${PYTHON_REQUIRED_USE}
 
 DEPEND="
 	dev-qt/qtcore:5
+	dev-qt/qtgui:5
+	dev-qt/qtnetwork:5
 	dev-qt/qtopengl:5
 	dev-qt/qtx11extras:5
-	dev-qt/qtgui:5
 	net-misc/curl
 	sys-libs/zlib
 	media-libs/assimp
@@ -83,15 +84,19 @@ src_prepare() {
 			echo "CONFIG += deng_$(usex snowberry '' no)snowberry"
 		fi
 
-		use fluidsynth && echo "CONFIG += deng_fluidsynth"
+		if use fluidsynth ; then
+			echo "CONFIG += deng_fluidsynth"
+		fi
 
-		use tools || echo "CONFIG += deng_notools"
+		if ! use tools ; then
+			echo "CONFIG += deng_notools"
+		fi
 
-		use openal && echo "CONFIG += deng_openal"
+		if use openal ; then
+			echo "CONFIG += deng_openal"
+		fi
 
 	} > config_user.pri || die
-
-	qt5-build_src_prepare
 }
 
 #Usage: doom_make_wrapper <name> <game> <icon> <desktop entry title> [args]
@@ -103,12 +108,11 @@ doom_make_wrapper() {
 }
 
 src_configure() {
-	qt5-build_src_configure
+	eqmake5 doomsday.pro
 }
 
 src_install() {
-	qt5-build_src_install
-
+	emake INSTALL_ROOT="${D}" install
 	dodoc "${S}"/../README.md
 
 	mv "${D%/}"/usr/share/{${PN}/data/jdoom,doom-data} || die
