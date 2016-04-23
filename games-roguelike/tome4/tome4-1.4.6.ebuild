@@ -102,4 +102,3 @@ src_install() {
 
 	make_desktop_entry ${PN} "ToME4"
 }
-
